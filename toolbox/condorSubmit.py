@@ -19,12 +19,14 @@ error  = {dir}/{name}submitScript.$(Cluster)_$(ProcId).err
 log    = {dir}/{name}submitScript.$(Cluster)_$(ProcId).log
 output = {dir}/{name}submitScript.$(Cluster)_$(ProcId).out
 run_as_owner = true
-Requirements = ( OpSysAndVer == "CentOS7" )
+Requirements = ( OpSysAndVer == "RedHat9" )
 RequestMemory = {memory}
 RequestDisk = {disk}
 +RequestRuntime = {runtime}
 Request_Cpus = {ncores}
 JobBatchName = {batchname}
++MySingularityImage = "/cvmfs/unpacked.cern.ch/registry.hub.docker.com/cmssw/el7:x86_64"
++MySingularityArgs = "--bind /nfs:/nfs --bind /pnfs:/pnfs --bind /afs:/afs --bind /cvmfs:/cvmfs"
 """
 
 submitTemplateETP = """
@@ -35,7 +37,7 @@ error  = {dir}/{name}submitScript.$(Cluster)_$(ProcId).err
 log    = {dir}/{name}submitScript.$(Cluster)_$(ProcId).log
 output = {dir}/{name}submitScript.$(Cluster)_$(ProcId).out
 run_as_owner = true
-Requirements = ( OpSysAndVer == "CentOS7" )
+Requirements = ( OpSysAndVer == "RedHat9" )
 RequestMemory = {memory}
 RequestDisk = {disk}
 +RequestWalltime = {runtime}
