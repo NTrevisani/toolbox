@@ -11,21 +11,54 @@ import sys
 
 import toolbox.printer as printer
 
+
+## universe = vanilla and run_as_owner = true removed (admin hint)
+# periodic_release = (HoldReasonCode == 26) && (NumJobStarts < 4) ## resubmit automatically if runtime expires (code 26)
 submitTemplateNAF = """
-universe = vanilla
 executable = /bin/zsh
 arguments = {arg}
 error  = {dir}/{name}submitScript.$(Cluster)_$(ProcId).err
 log    = {dir}/{name}submitScript.$(Cluster)_$(ProcId).log
 output = {dir}/{name}submitScript.$(Cluster)_$(ProcId).out
-run_as_owner = true
-Requirements = ( OpSysAndVer == "CentOS7" )
 RequestMemory = {memory}
 RequestDisk = {disk}
+Request_OpSysAndVer = "RedHat9"
 +RequestRuntime = {runtime}
 Request_Cpus = {ncores}
 JobBatchName = {batchname}
 """
+
+# submitTemplateNAF = """
+# universe = vanilla
+# executable = /bin/zsh
+# arguments = {arg}
+# error  = {dir}/{name}submitScript.$(Cluster)_$(ProcId).err
+# log    = {dir}/{name}submitScript.$(Cluster)_$(ProcId).log
+# output = {dir}/{name}submitScript.$(Cluster)_$(ProcId).out
+# run_as_owner = true
+# Requirements = ( OpSysAndVer == "CentOS7" )
+# RequestMemory = {memory}
+# RequestDisk = {disk}
+# +RequestRuntime = {runtime}
+# Request_Cpus = {ncores}
+# JobBatchName = {batchname}
+# """
+
+#submitTemplateNAF = """
+#universe = vanilla
+#executable = /bin/zsh
+#arguments = {arg}
+#error  = {dir}/{name}submitScript.$(Cluster)_$(ProcId).err
+#log    = {dir}/{name}submitScript.$(Cluster)_$(ProcId).log
+#output = {dir}/{name}submitScript.$(Cluster)_$(ProcId).out
+#run_as_owner = true
+#RequestMemory = {memory}
+#RequestDisk = {disk}
+#+RequestRuntime = {runtime}
+#+MySingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7"
+#Request_Cpus = {ncores}
+#JobBatchName = {batchname}
+#"""
 
 submitTemplateETP = """
 universe = docker
@@ -61,9 +94,9 @@ def submitToBatch(workdir, list_of_shells, memory_ = "1000", disk_ = "1000000", 
 def writeArrayScript(workdir, files, name_):
     path = os.path.abspath(workdir+"/"+name_+"_arraySubmit.sh")
     files = [os.path.abspath(f) for f in files]
-    
-    code = """
+
 #!/bin/bash
+    code = """
 subtasklist=(
 %(tasks)s
 )
@@ -136,7 +169,8 @@ def condorSubmit(submitPath):
         process.wait()
         output = process.communicate()
         try:
-            jobID = int(str(output[0]).split(".")[0])
+            # jobID = int(str(output[0]).split(".")[0])
+            jobID = int(str(output[0].decode('utf-8')).split(".")[0]) #EP python3 update
         except:
             return 
             print("something went wrong with calling the condir_submit command, submission of jobs was not successful")
@@ -189,6 +223,7 @@ def monitorJobStatus(jobIDs = None, queryInterval = 60, nTotalJobs = None):
         a.wait()
         qstat = a.communicate()[0]
         nrunning = 0
+        qstat = qstat.decode('utf-8') # EP added for python3 update
         querylines = [line for line in qstat.split("\n") if "Total for query" in line]
 
         # check if query matches

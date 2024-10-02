@@ -245,7 +245,7 @@ class HistogramSetup(HSSetters):
         '''
         yMax = 0.
         yMinMax = 1e10
-        hists = lineHistograms.values()
+        hists = list(lineHistograms.values()) #EP changed due to python3
         if len(stackedHistograms) > 0:
             hists.append(stackedHistograms[-1])
         for h in hists:

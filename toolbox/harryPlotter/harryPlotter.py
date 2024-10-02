@@ -84,7 +84,7 @@ class HarryPlotter(HPSetters):
 
         # prune systematics file
         columns = ["Uncertainty", "Type", "SysGroup"]+self.processNames
-        self.sf.drop(self.sf.columns.difference(columns), 1, inplace = True)
+        self.sf.drop(self.sf.columns.difference(columns), axis = 1, inplace = True)
         self.sf = self.sf[columns]
 
         # drop all unneccessary lines

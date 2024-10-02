@@ -201,8 +201,10 @@ def printCMSLabel(pad, privateWork = True, plotLabel = "private work",
     latex.SetTextColor(ROOT.kBlack)
     latex.SetTextSize(0.04)
 
+    # EP changed
     text = "CMS"
     if privateWork: text += " #bf{#it{"+plotLabel+"}}"
+    # text = "#bf{"+plotLabel+"}"
     x = 0.
     y = 0.
     if ratio:
