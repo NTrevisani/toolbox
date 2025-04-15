@@ -28,54 +28,27 @@ Request_Cpus = {ncores}
 JobBatchName = {batchname}
 """
 
-# submitTemplateNAF = """
-# universe = vanilla
-# executable = /bin/zsh
-# arguments = {arg}
-# error  = {dir}/{name}submitScript.$(Cluster)_$(ProcId).err
-# log    = {dir}/{name}submitScript.$(Cluster)_$(ProcId).log
-# output = {dir}/{name}submitScript.$(Cluster)_$(ProcId).out
-# run_as_owner = true
-# Requirements = ( OpSysAndVer == "CentOS7" )
-# RequestMemory = {memory}
-# RequestDisk = {disk}
-# +RequestRuntime = {runtime}
-# Request_Cpus = {ncores}
-# JobBatchName = {batchname}
-# """
-
-#submitTemplateNAF = """
-#universe = vanilla
-#executable = /bin/zsh
-#arguments = {arg}
-#error  = {dir}/{name}submitScript.$(Cluster)_$(ProcId).err
-#log    = {dir}/{name}submitScript.$(Cluster)_$(ProcId).log
-#output = {dir}/{name}submitScript.$(Cluster)_$(ProcId).out
-#run_as_owner = true
-#RequestMemory = {memory}
-#RequestDisk = {disk}
-#+RequestRuntime = {runtime}
-#+MySingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7"
-#Request_Cpus = {ncores}
-#JobBatchName = {batchname}
-#"""
-
 submitTemplateETP = """
-universe = docker
-executable = /bin/zsh
-arguments = {arg}
-error  = {dir}/{name}submitScript.$(Cluster)_$(ProcId).err
-log    = {dir}/{name}submitScript.$(Cluster)_$(ProcId).log
-output = {dir}/{name}submitScript.$(Cluster)_$(ProcId).out
-run_as_owner = true
-Requirements = ( OpSysAndVer == "CentOS7" )
-RequestMemory = {memory}
-RequestDisk = {disk}
-+RequestWalltime = {runtime}
-JobBatchName = {batchname}
-accounting_group=cms.higgs
-requirements = TARGET.ProvidesIO && TARGET.ProvidesEKPResources
-docker_image = mschnepf/slc7-condocker
+universe = container                                                                                                                                                                                                                                                            
+container_image = /cvmfs/unpacked.cern.ch/registry.hub.docker.com/cverstege/alma9-gridjob:latest                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                
+executable = /bin/bash                                                                                                                                                                                                                                                          
+arguments = {arg}                                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                                
+error  = {dir}/{name}submitScript.$(Cluster)_$(ProcId).err                                                                                                                                                                                                                      
+log    = {dir}/{name}submitScript.$(Cluster)_$(ProcId).log                                                                                                                                                                                                                      
+output = {dir}/{name}submitScript.$(Cluster)_$(ProcId).out                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                
+run_as_owner = true                                                                                                                                                                                                                                                             
+                                                                                                                                                                                                                                                                                
+RequestMemory = {memory}                                                                                                                                                                                                                                                        
+RequestDisk = {disk}                                                                                                                                                                                                                                                            
++RequestWalltime = {runtime}                                                                                                                                                                                                                                                    
+JobBatchName = {batchname}                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                
+accounting_group=cms.higgs                                                                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                                                
+requirements = TARGET.ProvidesIO && TARGET.ProvidesEKPResources 
 """
 
 def submitToBatch(workdir, list_of_shells, memory_ = "1000", disk_ = "1000000", runtime_ = "43200", ncores_ = "1", use_proxy = False, proxy_dir_ = "", name_ = ""):
