@@ -11,6 +11,15 @@ import sys
 
 import toolbox.printer as printer
 
+# Get site given the username                                                                                                                                                                               
+uname = os.uname()[1]
+site = ""
+if 'naf' in uname or 'desy' in uname:
+    site = 'desy'
+elif any(x in uname for x in ['portal', 'etp', 'kit', 'mdm', 'ms']):
+    site = 'kit'
+else:
+    raise ValueError(f"I cannot associate the username {uname} to any site I know.")
 
 ## universe = vanilla and run_as_owner = true removed (admin hint)
 # periodic_release = (HoldReasonCode == 26) && (NumJobStarts < 4) ## resubmit automatically if runtime expires (code 26)
@@ -123,7 +132,11 @@ x509userproxy = {proxy_dir}""".format(proxy_dir = proxy_dir_)
 Queue Environment From (
 """
     for taskID in range(nScripts):
-        code += "\"SGE_TASK_ID="+str(taskID+1)+"\"\n"
+        # For some reasons, at DESY we have to start counting from 1 instead of 0                                                                                                                           
+        if site == 'kit':
+            code += "\"SGE_TASK_ID="+str(taskID)+"\"\n"
+        elif site == 'desy':
+            code += "\"SGE_TASK_ID="+str(taskID+1)+"\"\n"
     code += ")"
 
     with open(path, "w") as f:
