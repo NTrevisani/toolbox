@@ -38,26 +38,26 @@ JobBatchName = {batchname}
 """
 
 submitTemplateETP = """
-universe = container                                                                                                                                                                                                                                                            
-container_image = /cvmfs/unpacked.cern.ch/registry.hub.docker.com/cverstege/alma9-gridjob:latest                                                                                                                                                                                
-                                                                                                                                                                                                                                                                                
-executable = /bin/bash                                                                                                                                                                                                                                                          
-arguments = {arg}                                                                                                                                                                                                                                                               
-                                                                                                                                                                                                                                                                                
-error  = {dir}/{name}submitScript.$(Cluster)_$(ProcId).err                                                                                                                                                                                                                      
-log    = {dir}/{name}submitScript.$(Cluster)_$(ProcId).log                                                                                                                                                                                                                      
-output = {dir}/{name}submitScript.$(Cluster)_$(ProcId).out                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                
-run_as_owner = true                                                                                                                                                                                                                                                             
-                                                                                                                                                                                                                                                                                
-RequestMemory = {memory}                                                                                                                                                                                                                                                        
-RequestDisk = {disk}                                                                                                                                                                                                                                                            
-+RequestWalltime = {runtime}                                                                                                                                                                                                                                                    
-JobBatchName = {batchname}                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                
-accounting_group=cms.higgs                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                
-requirements = TARGET.ProvidesIO && TARGET.ProvidesEKPResources 
+universe = container
+container_image = /cvmfs/unpacked.cern.ch/registry.hub.docker.com/cverstege/alma9-gridjob:latest
+
+executable = /bin/bash
+arguments = {arg}
+
+error  = {dir}/{name}submitScript.$(Cluster)_$(ProcId).err
+log    = {dir}/{name}submitScript.$(Cluster)_$(ProcId).log
+output = {dir}/{name}submitScript.$(Cluster)_$(ProcId).out
+
+run_as_owner = true
+
+RequestMemory = {memory}
+RequestDisk = {disk}
++RequestWalltime = {runtime}
+JobBatchName = {batchname}
+
+accounting_group=cms.higgs
+
+requirements = TARGET.ProvidesIO && TARGET.ProvidesEKPResources
 """
 
 def submitToBatch(workdir, list_of_shells, memory_ = "1000", disk_ = "1000000", runtime_ = "43200", ncores_ = "1", use_proxy = False, proxy_dir_ = "", name_ = ""):
