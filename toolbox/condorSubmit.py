@@ -123,7 +123,11 @@ x509userproxy = {proxy_dir}""".format(proxy_dir = proxy_dir_)
 Queue Environment From (
 """
     for taskID in range(nScripts):
-        code += "\"SGE_TASK_ID="+str(taskID+1)+"\"\n"
+        # For some reasons, at DESY we have to start counting from 1 instead of 0                                                                                                                                  
+        if site == 'kit':
+            code += "\"SGE_TASK_ID="+str(taskID)+"\"\n"
+        elif site == 'desy':
+            code += "\"SGE_TASK_ID="+str(taskID+1)+"\"\n"
     code += ")"
 
     with open(path, "w") as f:
